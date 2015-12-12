@@ -12,15 +12,10 @@ first_to_basement = -1
 
 File.open(input_file, 'r') do |f|
   f.each_char.with_index(1) do |c, i|
-    if c == '('
-      cur_floor += 1
-    elsif c == ')'
-      cur_floor -= 1
-    end
+    cur_floor += 1 if c.eql? '('
+    cur_floor -= 1 if c.eql? ')'
 
-    if cur_floor < 0 && first_to_basement == -1
-      first_to_basement = i
-    end
+    first_to_basement = i if cur_floor < 0 && first_to_basement == -1
   end
 end
 
