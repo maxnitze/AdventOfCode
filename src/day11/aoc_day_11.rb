@@ -3,12 +3,13 @@
 @inc_straight_letters = ('a'..'z').to_a.each_cons(3).map &:join
 
 def match_requirements password
-  password.length == 8 && password.match("(#{@inc_straight_letters.join '|'})") && !password.match(/[iol]/) && password.match(/((\S)\2).*(((?!\2).)\4)/)
+  password.match("(#{@inc_straight_letters.join '|'})") && !password.match(/[iol]/) && password.match(/((\S)\2).*(((?!\2).)\4)/)
 end
 
 def get_new_password password
   begin
     password.succ!
+    raise "there is no next password from \"#{password}\" that matches the requirements" if password.length > 8
   end while !match_requirements password
   password
 end
