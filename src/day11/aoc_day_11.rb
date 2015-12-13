@@ -3,7 +3,7 @@
 @inc_straight_letters = ('a'..'z').to_a.each_cons(3).map &:join
 
 def match_requirements password
-  password.match("(#{@inc_straight_letters.join '|'})") && !password.match(/[iol]/) && password.match(/((\S)\2).*(((?!\2).)\4)/)
+  password.match("(#{@inc_straight_letters.join '|'})") && !password.match(/[iol]/) && password.match(/((\S)\2).*(((?!\2)\S)\4)/)
 end
 
 def get_new_password password
