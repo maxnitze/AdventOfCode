@@ -2,10 +2,10 @@
 
 require 'json'
 
-def get_sum val, get_non_red = true
+def get_sum val, get_red = true
   val.is_a?(Integer) ? val :
-    (val.is_a?(Array) ? val.reduce(0) { |x, e| x + get_sum(e, get_non_red) } :
-      (val.is_a?(Hash) && (get_non_red || !val.has_value?('red')) ? val.reduce(0) { |x, e| x + get_sum(e[1], get_non_red) } : 0))
+    (val.is_a?(Array) ? val.reduce(0) { |x, e| x + get_sum(e, get_red) } :
+      (val.is_a?(Hash) && (get_red || !val.has_value?('red')) ? val.reduce(0) { |x, e| x + get_sum(e[1], get_red) } : 0))
 end
 
 if ARGV[0] && File.file?(ARGV[0])
