@@ -9,7 +9,7 @@ end
 def get_new_password password
   begin
     password.succ!
-    raise "there is no next password from \"#{password}\" that matches the requirements" if password.length > 8
+    raise "there is no next password that matches the requirements" if password.length > 8
   end while !match_requirements password
   password
 end
