@@ -15,10 +15,7 @@ else
   exit 1
 end
 
-input = nil
-File.open(input_file, 'r') do |f|
-  input = JSON.parse f.read
-end
+input = JSON.parse File.read(input_file)
 
 puts "The sum of all numbers of the given input is #{get_sum input}."
 puts "The sum of all numbers without those inside a red object is #{get_sum input, false}."
