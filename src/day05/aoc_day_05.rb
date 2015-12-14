@@ -5,7 +5,7 @@ def is_nice_1 line
 end
 
 def is_nice_2 line
-  line.match(/(.{2}).*\1/) && line.match(/(.).\1/)
+  line.match(/(\S{2}).*\1/) && line.match(/(\S)\S\1/)
 end
 
 if ARGV[0] && File.file?(ARGV[0])
