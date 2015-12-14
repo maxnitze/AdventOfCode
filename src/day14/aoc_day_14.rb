@@ -42,7 +42,6 @@ set_reindeer_fields! reindeers, seconds
 longest_distance_reindeer = reindeers.sort_by { |r| r[:dist] }.last
 puts "The reindeer with the longest distance after '#{seconds}' seconds is \"#{longest_distance_reindeer[:name]}\" with a distance of #{longest_distance_reindeer[:dist]} km."
 
-
 most_points_reindeer = reindeers.sort_by { |r| r[:points] }.last
 puts "The reindeer with the most points after '#{seconds}' seconds is \"#{most_points_reindeer[:name]}\" with #{most_points_reindeer[:points]} points."
 
