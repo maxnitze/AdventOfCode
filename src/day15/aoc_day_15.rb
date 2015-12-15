@@ -7,15 +7,9 @@ def increment_array! array, total
 end
 
 def increment_array_with_idx! array, i, total
-  return false if i>=array.size
-
-  if array[i..-1].reduce(0) { |s, e| s + e } < total
-    array[i] += 1
-    return true
-  else
-    array[i] = 0
-    return increment_array_with_idx! array, i+1, total
-  end
+  i>=array.size ? false :
+    (array[i..-1].reduce(0) { |s, e| s + e } < total ? (array[i] += 1; true) :
+      ((array[i] = 0; increment_array_with_idx! array, i+1, total)))
 end
 
 if ARGV[0] && File.file?(ARGV[0])
@@ -56,6 +50,7 @@ begin
 end while increment_array! cur_distr, total_teaspoons
 
 puts "The total score of the highest-scoring cookie is '#{scorings.sort_by { |s| s[:score] }.last[:score]}'."
-puts "The total score of the highest-scoring cookie with exactly '500' calories is '#{scorings.select { |s| s[:calories] == 500 }.sort_by { |s| s[:score] }.last[:score]}'."
+calories = 500
+puts "The total score of the highest-scoring cookie with exactly '#{calories}' calories is '#{scorings.select { |s| s[:calories] == calories }.sort_by { |s| s[:score] }.last[:score]}'."
 
 exit 0
