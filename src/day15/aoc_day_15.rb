@@ -1,19 +1,19 @@
 #!usr/bin/env ruby
 
 def increment_array! array, total
-  inced = increment_array_with_idx! array, 0, total
+  inced = increment_array_with_idx! array, 1, total
   array[0] = total-array[1..-1].reduce(0) { |s, e| s + e }
   inced
 end
 
 def increment_array_with_idx! array, i, total
-  return false if i>=array.size-1
+  return false if i>=array.size
 
-  array[i] = 0
-  if array[i+1..-1].reduce(0) { |s, e| s + e }+1 <= total
-    array[i+1] += 1
+  if array[i..-1].reduce(0) { |s, e| s + e } < total
+    array[i] += 1
     return true
   else
+    array[i] = 0
     return increment_array_with_idx! array, i+1, total
   end
 end
