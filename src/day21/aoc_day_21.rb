@@ -2,11 +2,13 @@
 
 def fight player, boss
   begin
-    if (boss[:hp] -= player[:damage] - boss[:armor]) <= 0
+    player_damage = player[:damage] - boss[:armor]
+    if (boss[:hp] -= (player_damage <= 0 ? 1 : player_damage)) <= 0
       return player[:hp]
     end
 
-    if (player[:hp] -= boss[:damage] - player[:armor]) <= 0
+    boss_damage = boss[:damage] - player[:armor]
+    if (player[:hp] -= (boss_damage <= 0 ? 1 : boss_damage)) <= 0
       return player[:hp]
     end
   end while player[:hp] > 0 && boss[:hp] > 0
