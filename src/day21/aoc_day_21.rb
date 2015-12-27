@@ -3,14 +3,10 @@
 def fight player, boss
   begin
     player_damage = player[:damage] - boss[:armor]
-    if (boss[:hp] -= (player_damage <= 0 ? 1 : player_damage)) <= 0
-      return player[:hp]
-    end
+    return player[:hp] if (boss[:hp] -= (player_damage <= 0 ? 1 : player_damage)) <= 0
 
     boss_damage = boss[:damage] - player[:armor]
-    if (player[:hp] -= (boss_damage <= 0 ? 1 : boss_damage)) <= 0
-      return player[:hp]
-    end
+    return player[:hp] if (player[:hp] -= (boss_damage <= 0 ? 1 : boss_damage)) <= 0
   end while player[:hp] > 0 && boss[:hp] > 0
   raise "can not happen since return statement is called in loop"
 end
