@@ -13,3 +13,10 @@ val sameSuccessorsSum = inputFileText
     .fold(0, { sum, v -> sum + v })
 
 println("the sum of the values that are the same as their sucessor is '$sameSuccessorsSum'")
+
+val sameHalfWayRoundSuccessorsSum = inputFileText
+    .filterIndexed { i, c -> c == inputFileText[(i+inputFileText.length/2)%inputFileText.length] }
+    .map { it.toString().toInt() }
+    .fold(0, { sum, v -> sum + v })
+
+println("the sum of the values that are the same as their half-way-round-sucessor is '$sameHalfWayRoundSuccessorsSum'")
