@@ -1,8 +1,8 @@
 import java.io.File
 
-fun sumListOfFilteredCharacters(intCharacterString: String, filterFunction: (i: Int, c: Char) -> Boolean): Int {
+fun sumListOfFilteredCharacters(intCharacterString: String, offset: Int): Int {
     return intCharacterString
-        .filterIndexed(filterFunction)
+        .filterIndexed { i, c -> c == intCharacterString[(i+offset)%intCharacterString.length] }
         .map { it.toString().toInt() }
         .fold(0, { sum, v -> sum + v })
 }
@@ -15,14 +15,8 @@ if (!inputFile.exists() || !inputFile.isFile()) {
 
 val inputFileText = inputFile.readText()
 
-val sameSuccessorsSum = sumListOfFilteredCharacters(
-    inputFileText,
-    { i, c -> c == inputFileText[(i+1)%inputFileText.length] }
-)
+val sameSuccessorsSum = sumListOfFilteredCharacters(inputFileText, 1)
 println("the sum of the values that are the same as their sucessor is '$sameSuccessorsSum'")
 
-val sameHalfWayRoundSuccessorsSum = sumListOfFilteredCharacters(
-    inputFileText,
-    { i, c -> c == inputFileText[(i+inputFileText.length/2)%inputFileText.length] }
-)
+val sameHalfWayRoundSuccessorsSum = sumListOfFilteredCharacters(inputFileText, inputFileText.length/2)
 println("the sum of the values that are the same as their half-way-round-sucessor is '$sameHalfWayRoundSuccessorsSum'")
