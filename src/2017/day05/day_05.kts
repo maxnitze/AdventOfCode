@@ -9,14 +9,28 @@ if (!inputFile.exists() || !inputFile.isFile()) {
 val offsetList = inputFile
     .readLines()
     .map { it.toInt() }
-    .toMutableList()
 
-var index = 0
-var steps = 0
-while (index < offsetList.size) {
-    offsetList[index] += 1
-    index += offsetList[index]-1
-    steps += 1
+val partOneOffsetList = offsetList.toMutableList()
+
+var partOneIndex = 0
+var partOneSteps = 0
+while (partOneIndex < partOneOffsetList.size) {
+    partOneOffsetList[partOneIndex] += 1
+    partOneIndex += partOneOffsetList[partOneIndex]-1
+    partOneSteps += 1
 }
 
-println("it takes '${steps}' steps to the first one leading out of the list")
+println("it takes '${partOneSteps}' steps to the first one leading out of the list when increasing by one")
+
+val partTwoOffsetList = offsetList.toMutableList()
+
+var partTwoIndex = 0
+var partTwoSteps = 0
+while (partTwoIndex < partTwoOffsetList.size) {
+    val incValue = if (partTwoOffsetList[partTwoIndex] >= 3) -1 else 1
+    partTwoOffsetList[partTwoIndex] += incValue
+    partTwoIndex += partTwoOffsetList[partTwoIndex]-incValue
+    partTwoSteps += 1
+}
+
+println("it takes '${partTwoSteps}' steps to the first one leading out of the list when increasing by one or decreasing by three")
