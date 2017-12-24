@@ -6,10 +6,18 @@ if (!inputFile.exists() || !inputFile.isFile()) {
     System.exit(1)
 }
 
-val validPasswords = inputFile
+val noDuplicatePasswords = inputFile
     .readLines()
     .map { it.split("\\s+".toRegex()) }
     .filter { it.size == it.distinct().size }
     .size
 
-println("the input contains '$validPasswords' valid passwords")
+println("the input contains '$noDuplicatePasswords' valid passphrases with no duplicate words")
+
+val noAnagramPasswords = inputFile
+    .readLines()
+    .map { it.split("\\s+".toRegex()) }
+    .filter { it.size == it.map { it.toCharArray().sorted() }.distinct().size }
+    .size
+
+println("the input contains '$noAnagramPasswords' valid passphrases with no anagrams")
