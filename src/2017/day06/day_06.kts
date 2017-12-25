@@ -27,12 +27,15 @@ val currentConfig = inputFile
     .map { it.toInt() }
     .toMutableList()
 
-val configs = mutableSetOf<List<Int>>()
+val configs = mutableListOf<List<Int>>()
 var cycles = 0
+var currentConfigIndex: Int
 do {
     configs.add(currentConfig.toList())
     reallocateConfig(currentConfig)
     cycles += 1
-} while (!configs.contains(currentConfig.toList()))
+    currentConfigIndex = configs.indexOf(currentConfig.toList())
+} while (currentConfigIndex == -1)
 
 println("it takes '$cycles' redistribution cycles to reach a configuration, that had been seen before")
+println("the length of the found cycle is '${configs.size-currentConfigIndex}'")
