@@ -20,13 +20,14 @@ fun compare(expr: String, registers: MutableMap<String, Int>): Boolean {
     }
 }
 
-val registers = mutableMapOf<String, Int>()
 val regex = """^(\S+) (inc|dec) (\-?\d+) if (\S+ (!?==|!=|<=|>=|<|>) \-?\d+)$""".toRegex()
-inputFile
+
+var highestOverallValue = 0
+val registers = inputFile
     .readLines()
     .filter { regex.matches(it) }
-    .forEach {
-        val (_, assVar, incDec, assVal, expr) = regex.matchEntire(it)!!.groups.map { it!!.value }
+    .fold(mutableMapOf<String, Int>(), { registers, line ->
+        val (_, assVar, incDec, assVal, expr) = regex.matchEntire(line)!!.groups.map { it!!.value }
         
         if (compare(expr, registers)) {
             when (incDec) {
@@ -34,11 +35,17 @@ inputFile
                 "dec" -> registers.put(assVar, registers.getOrPut(assVar, { 0 }) - assVal.toInt())
                 else -> throw RuntimeException("something went very wroong here!")
             }
-        }
-    }
 
-val largestValue = registers
+            val assVarRegisterVal = registers.get(assVar)!!
+            highestOverallValue = if (assVarRegisterVal > highestOverallValue) assVarRegisterVal else highestOverallValue
+        }
+
+        registers
+    })
+
+val highestEndValue = registers
     .map { it.value }
     .max()
 
-println("after completing the instructions the largest value is any register is '${largestValue ?: "null"}'")
+println("after completing the instructions the largest value is any register is '${highestEndValue ?: "null"}'")
+println("during the process the highest value of any register was '$highestOverallValue'")
