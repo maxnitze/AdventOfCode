@@ -6,46 +6,60 @@ if (!inputFile.exists() || !inputFile.isFile()) {
     System.exit(1)
 }
 
+fun handleGroup(char: Char, sumPair: Pair<Int, Int>, state: State): Pair<Int, Int> {
+    return when (char) {
+        '{' -> {
+            state.currentScore += 1
+            sumPair
+        }
+        '}' -> {
+            state.currentScore -= 1
+            Pair(sumPair.first + (state.currentScore+1), sumPair.second)
+        }
+        ',' -> sumPair
+        '<' -> {
+            state.currentRule = "garbage"
+            sumPair
+        }
+        else -> throw RuntimeException("something went very wrong here!")
+    }
+}
+
+fun handleGarbage(char: Char, sumPair: Pair<Int, Int>, state: State): Pair<Int, Int> {
+    return if (state.ignore) {
+        state.ignore = false
+        sumPair
+    } else if (char == '!') {
+        state.ignore = true
+        sumPair
+    } else if (char == '>') {
+        state.currentRule = "group"
+        sumPair
+    } else {
+        Pair(sumPair.first, sumPair.second+1)
+    }
+}
+
 data class State(var currentRule: String, var ignore: Boolean, var currentScore: Int, var totalScore: Int)
 
 val state = State("group", false, 0, 0)
-val summedScore = inputFile
+
+// destructuring assignment not possible here due to script compiler bug
+// https://youtrack.jetbrains.com/issue/KT-22029
+val counts = inputFile
     .readText()
     .trim()
     .toCharArray()
-    .fold(0, { sum, char ->
+    .fold(Pair(0, 0), { sumPair, char ->
         when (state.currentRule) {
             "group" -> {
-                when (char) {
-                    '{' -> {
-                        state.currentScore += 1
-                        sum
-                    }
-                    '}' -> {
-                        state.currentScore -= 1
-                        sum + (state.currentScore+1)
-                    }
-                    ',' -> sum
-                    '<' -> {
-                        state.currentRule = "garbage"
-                        sum
-                    }
-                    else -> throw RuntimeException("something went very wrong here!")
-                }
+                handleGroup(char, sumPair, state)
             }
             "garbage" -> {
-                if (state.ignore) {
-                    state.ignore = false
-                } else if (char == '!') {
-                    state.ignore = true
-                } else if (char == '>') {
-                    state.currentRule = "group"
-                }
-
-                sum
+                handleGarbage(char, sumPair, state)
             }
             else -> throw RuntimeException("something went very wrong here!")
         }
     })
 
-println("the total score for all groups is '$summedScore'")
+println("the total score for all groups is '${counts.first}' with '${counts.second}' characters of garbage")
