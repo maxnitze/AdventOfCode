@@ -32,11 +32,13 @@ data class Hexagon(val x: Int, val y: Int, val z: Int) {
 
 }
 
-val resultHexagon = inputFile
+val (resultHexagon, maxDistance) = inputFile
     .readText()
     .split(",")
-    .fold(Hexagon(0,0,0), { hexagon, direction ->
-        hexagon.move(direction)
+    .fold(Pair(Hexagon(0,0,0), 0), { (hexagon, maxDistance), direction ->
+        val resultHexagon = hexagon.move(direction)
+        Pair(resultHexagon, listOf(maxDistance, resultHexagon.distanceTo(Hexagon(0,0,0))).max()!!)
     })
 
 println("on the shortest path it takes '${resultHexagon.distanceTo(Hexagon(0,0,0))}' steps to reach the stuck process")
+println("on the shortest path it takes '${maxDistance}' steps to reach the furthest the stuck process ever got")
