@@ -12,6 +12,24 @@ fun programForPid(pid: Int, programs: Map<Int, Program>): Program {
     return programs[pid] ?: throw RuntimeException("something went very wrong here!")
 }
 
+fun groupForId(startingPid: Int, programs: Map<Int, Program>): Set<Int> {
+    val programsGroup = mutableSetOf<Int>()
+    var programsToFollow = mutableSetOf(startingPid)
+    while (programsToFollow.any()) {
+        programsToFollow = programsToFollow
+            .fold(mutableSetOf<Int>(), { thisProgramsToFollow, pid ->
+                if (!programsGroup.contains(pid)) {
+                    programsGroup.add(pid)
+                    thisProgramsToFollow.addAll(programForPid(pid, programs).connected)
+                }
+
+                thisProgramsToFollow
+            })
+    }
+
+    return programsGroup
+}
+
 val inputRegex = """^(\d+) <-> (\d+(!?, \d+)*)$""".toRegex()
 
 val programs = inputFile
@@ -23,18 +41,17 @@ val programs = inputFile
     }
     .associateBy( { it.pid }, { it } )
 
-val programZeroGroup = mutableSetOf<Int>()
-var programsToFollow = mutableSetOf(0)
-while (programsToFollow.any()) {
-    programsToFollow = programsToFollow
-        .fold(mutableSetOf<Int>(), { thisProgramsToFollow, pid ->
-            if (!programZeroGroup.contains(pid)) {
-                programZeroGroup.add(pid)
-                thisProgramsToFollow.addAll(programForPid(pid, programs).connected)
-            }
-
-            thisProgramsToFollow
-        })
-}
+val programZeroGroup = groupForId(0, programs)
 
 println("the group of the program with the id '0' contains '${programZeroGroup.size}' programs")
+
+val groups = mutableSetOf(programZeroGroup)
+val pids = programs.map { it.key }.toMutableSet()
+pids.removeAll(programZeroGroup)
+while (pids.any()) {
+    val nextGroup = groupForId(pids.first(), programs)
+    groups.add(nextGroup)
+    pids.removeAll(nextGroup)
+}
+
+println("in total there are '${groups.size}' groups")
